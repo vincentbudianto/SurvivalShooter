@@ -4,5 +4,23 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Menu.unity
+    guid: f757057f36250e347b87ece8dbb9f1df
+  - enabled: 1
+    path: Assets/Scenes/Grass.unity
+    guid: 7499efbab473a834c8b926736cd05d79
+  - enabled: 1
+    path: Assets/Scenes/Snow.unity
+    guid: a62a793a9bdfaee47a609044fdbc43f2
+  - enabled: 1
+    path: Assets/Scenes/Desert.unity
+    guid: 76b662aa32bbce24eabf29531644da3b
+  - enabled: 1
+    path: Assets/Scenes/Graveyard.unity
+    guid: 19eeb33064c528c4a95252ffa5b73b19
+  - enabled: 1
+    path: Assets/Scenes/GameOver.unity
+    guid: 09ca6a52eca4a7b46856f262bdff0a23
   m_configObjects: {}

@@ -16399,6 +16399,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5397689960227989046, guid: 4ef7d8edd475c6e4da6124c1bb642741,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 5909294093142195756}
+    - target: {fileID: 5397689960227989046, guid: 4ef7d8edd475c6e4da6124c1bb642741,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: GoToMenu
+      objectReference: {fileID: 0}
     - target: {fileID: 5397689960234690324, guid: 4ef7d8edd475c6e4da6124c1bb642741,
         type: 3}
       propertyPath: m_AnchorMax.x

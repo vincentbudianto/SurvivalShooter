@@ -49,33 +49,6 @@ public class GameMenu : MonoBehaviour
 		Debug.Log("Status Code: " + request.responseCode);
 	}
 
-	// IEnumerator Post ()
-	// {
-	// 	WWWForm form = new WWWForm();
-
-	// 	form.AddField("username", username);
-	// 	form.AddField("score", score);
-
-	// 	using (UnityWebRequest request = UnityWebRequest.Post(url, form))
-	// 	{
-	// 		yield return request.Send();
-
-	// 		if (request.isNetworkError || request.isHttpError)
-	// 		{
-	// 			Debug.Log(request.error);
-	// 		}
-	// 		else
-	// 		{
-	// 			Debug.Log("Post Success");
-
-	// 			if (request.isDone)
-	// 			{
-	// 				Debug.Log("Post Complete");
-	// 			}
-	// 		}
-	// 	}
-	// }
-
 	public void SetPage (string page)
 	{
 		if(page == "play")

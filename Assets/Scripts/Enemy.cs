@@ -14,6 +14,7 @@ public class Enemy : MonoBehaviour
 	private float attackTimer;
 	public float attackRate;
 	private float dist;
+	private bool valid;
 	public int scoreToGive;
 	public GameObject target;
 	public AudioSource audioSource;
@@ -21,24 +22,37 @@ public class Enemy : MonoBehaviour
 
 	void Start ()
 	{
+		valid = true;
 		target = GameObject.Find("Player");
 		moveSpeed = Random.Range(moveSpeed, moveSpeed + 5);
-		animator.SetFloat("hp", Mathf.Abs(currHp));
+		animator.SetFloat("hp", (float)currHp);
 		audioSource.volume = PlayerPrefs.GetFloat("Volume");
 	}
 
 	void Update ()
 	{
-		Move();
-		horizontalMove = moveSpeed;
-		attackTimer += 1.0f * Time.deltaTime;
-		dist = Vector2.Distance(transform.position, target.transform.position);
-
-		if(currHp <= 0)
+		if (currHp > 0)
 		{
-			Destroy(gameObject);
-			Game.score += scoreToGive;
-			Game.killed += 1;
+			Move();
+			horizontalMove = moveSpeed;
+			attackTimer += 1.0f * Time.deltaTime;
+			dist = Vector2.Distance(transform.position, target.transform.position);
+		}
+		else
+		{
+			animator.SetFloat("speed", Mathf.Abs(0));
+
+			if (valid == true)
+			{
+				Game.score += scoreToGive;
+				Game.killed += 1;
+				valid = false;
+				gameObject.GetComponent<Rigidbody2D>().constraints |= RigidbodyConstraints2D.FreezePositionX;
+				gameObject.GetComponent<Rigidbody2D>().constraints |= RigidbodyConstraints2D.FreezePositionY;
+				gameObject.GetComponent<BoxCollider2D>().enabled = false;
+			}
+
+			Destroy(gameObject, 3);
 		}
 	}
 
@@ -54,7 +68,7 @@ public class Enemy : MonoBehaviour
 		{
 			animator.SetFloat("speed", Mathf.Abs(0));
 
-			if(attackTimer >= attackRate)
+			if((attackTimer >= attackRate) && (currHp > 0))
 			{
 				animator.SetBool("isAttack", true);
 				attackTimer = 0.0f;
@@ -103,7 +117,7 @@ public class Enemy : MonoBehaviour
 	public void Damaged (int dmg)
 	{
 		currHp -= dmg;
-		animator.SetFloat("hp", Mathf.Abs(currHp));
+		animator.SetFloat("hp", (float)currHp);
 		audioSource.PlayOneShot(hitSound);
 	}
 

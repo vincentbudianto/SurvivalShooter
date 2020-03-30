@@ -8,6 +8,7 @@ using System.Linq.Expressions;
 
 public class Menu : MonoBehaviour
 {
+	public string username;
 	public int highscore;
 	public int highestKill;
 	public int longestTime;
@@ -18,21 +19,25 @@ public class Menu : MonoBehaviour
 	public GameObject score;
 	public Transform scoreList;
 	public Text highscoreText;
+	public Text nameText;
 	public Text usernameText;
 	public Slider volumeSlider;
 
 	void Start ()
 	{
-		highscore = PlayerPrefs.GetInt("Highscore");
-		highestKill = PlayerPrefs.GetInt("Highest Kill");
-		longestTime = PlayerPrefs.GetInt("Longest Time");
-		PlayerPrefs.SetFloat("Volume", 1.0f);
+		username = PlayerPrefs.GetString("HighUsername", "");
+		highscore = PlayerPrefs.GetInt("Highscore", 0);
+		highestKill = PlayerPrefs.GetInt("Highest Kill", 0);
+		longestTime = PlayerPrefs.GetInt("Longest Time", 0);
+		volumeSlider.value = PlayerPrefs.GetFloat("Volume", 1);
+		usernameText.text = PlayerPrefs.GetString("Username", "");
 		StartCoroutine(GetScoreboard());
 	}
 
 	void Update ()
 	{
-		highscoreText.text = "Local Highscore : " + highscore + "\nLocal Highest Kill : " + highestKill + "\nLocal Longest Time : " + longestTime;
+		nameText.text = PlayerPrefs.GetString("Username", "");
+		highscoreText.text = "Name : " + username + "\nLocal Highscore : " + highscore + "\nLocal Highest Kill : " + highestKill + "\nLocal Longest Time : " + longestTime;
 	}
 
 	IEnumerator GetScoreboard ()
@@ -123,8 +128,15 @@ public class Menu : MonoBehaviour
 		{
 			SceneManager.LoadScene(4);
 		}
+	}
 
+	public void SetVolume ()
+	{
 		PlayerPrefs.SetFloat("Volume", volumeSlider.value);
+	}
+
+	public void SetUsername()
+	{
 		PlayerPrefs.SetString("Username", usernameText.text);
 	}
 

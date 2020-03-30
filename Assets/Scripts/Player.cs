@@ -18,6 +18,7 @@ public class Player : MonoBehaviour
 	private float attackTimer;
 	private float pushAttackTimer;
 	private float specialAttackTimer;
+	private float gameOverTimer;
 	public Transform firePoint;
 	public GameObject bullet;
 	public GameObject pushBullet;
@@ -37,70 +38,76 @@ public class Player : MonoBehaviour
 		shootDist = 100000;
 		currHp = 100;
 		maxHp = 100;
-		animator.SetFloat("hp", Mathf.Abs(currHp));
+		animator.SetFloat("hp", (float)currHp);
+		audioSource.volume = PlayerPrefs.GetFloat("Volume");
 	}
 
 	void Update()
 	{
-		CameraFollow();
-		horizontalMove = Input.GetAxisRaw("Horizontal") * speed;
-		animator.SetFloat("speed", Mathf.Abs(horizontalMove));
-		attackTimer += 1.0f * Time.deltaTime;
-		pushAttackTimer += 1.0f * Time.deltaTime;
-		specialAttackTimer += 1.0f * Time.deltaTime;
-
-		if (Input.GetKey(KeyCode.Space))
+		if (currHp > 0)
 		{
-			if (attackTimer >= 0.5)
+			CameraFollow();
+			horizontalMove = Input.GetAxisRaw("Horizontal") * speed;
+			animator.SetFloat("speed", Mathf.Abs(horizontalMove));
+			attackTimer += 1.0f * Time.deltaTime;
+			pushAttackTimer += 1.0f * Time.deltaTime;
+			specialAttackTimer += 1.0f * Time.deltaTime;
+
+			if (Input.GetKey(KeyCode.Space))
 			{
-				attackTimer = 0.0f;
-				Shoot();
+				if (attackTimer >= 0.5)
+				{
+					attackTimer = 0.0f;
+					Shoot();
+				}
+			}
+
+			if (Input.GetKey(KeyCode.F))
+			{
+				if (pushAttackTimer >= 1)
+				{
+					pushAttackTimer = 0.0f;
+					ShootPush();
+				}
+			}
+
+			if (Input.GetKey(KeyCode.Q))
+			{
+				if (specialAttackTimer >= 2)
+				{
+					specialAttackTimer = 0.0f;
+					ShootSpecial();
+				}
+			}
+
+			if (Input.GetButtonDown("Jump"))
+			{
+				isJump = true;
+				animator.SetBool("isJump", true);
+			}
+			else if (Input.GetButtonUp("Jump"))
+			{
+				animator.SetBool("isJump", false);
+			}
+
+			if (currHp > maxHp)
+			{
+				currHp = maxHp;
 			}
 		}
-
-		if (Input.GetKey(KeyCode.F))
-		{
-			if (pushAttackTimer >= 1)
-			{
-				pushAttackTimer = 0.0f;
-				ShootPush();
-			}
-		}
-
-		if (Input.GetKey(KeyCode.Q))
-		{
-			if (specialAttackTimer >= 2)
-			{
-				specialAttackTimer = 0.0f;
-				ShootSpecial();
-			}
-		}
-
-		if (Input.GetButtonDown("Jump"))
-		{
-			isJump = true;
-			animator.SetBool("isJump", true);
-		}
-		else if (Input.GetButtonUp("Jump"))
-		{
-			animator.SetBool("isJump", false);
-		}
-
-		if (currHp <= 0)
+		else
 		{
 			GameOver();
-		}
-
-		if (currHp > maxHp)
-		{
-			currHp = maxHp;
 		}
 	}
 
 	void FixedUpdate()
 	{
-		controller.Move(horizontalMove * Time.fixedDeltaTime, isJump);
-		isJump = false;
+		if (currHp > 0)
+		{
+			controller.Move(horizontalMove * Time.fixedDeltaTime, isJump);
+			isJump = false;
+		}
 	}
 
 	void Shoot()
@@ -124,7 +131,7 @@ public class Player : MonoBehaviour
 	public void Damaged(int dmg)
 	{
 		currHp -= dmg;
-		animator.SetFloat("hp", Mathf.Abs(currHp));
+		animator.SetFloat("hp", (float)currHp);
 		audioSource.PlayOneShot(hitSound);
 	}
 
@@ -135,25 +142,22 @@ public class Player : MonoBehaviour
 
 	void GameOver()
 	{
+		gameOverTimer += 1.0f * Time.deltaTime;
 		PlayerPrefs.SetInt("Score", Game.score);
 		PlayerPrefs.SetInt("Killed", Game.killed);
 		PlayerPrefs.SetInt("Time", (int)Game.time);
 
 		if (PlayerPrefs.GetInt("Highscore") < Game.score)
 		{
+			PlayerPrefs.SetString("HighUsername", PlayerPrefs.GetString("Username"));
 			PlayerPrefs.SetInt("Highscore", Game.score);
-		}
-
-		if (PlayerPrefs.GetInt("Highest Kill") < Game.killed)
-		{
 			PlayerPrefs.SetInt("Highest Kill", Game.killed);
-		}
-
-		if (PlayerPrefs.GetInt("Longest Time") < (int)Game.time)
-		{
 			PlayerPrefs.SetInt("Longest Time", (int)Game.time);
 		}
 
-		SceneManager.LoadScene(5);
+		if (gameOverTimer >= 3)
+		{
+			SceneManager.LoadScene(5);
+		}
 	}
 }

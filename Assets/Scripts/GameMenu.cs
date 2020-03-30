@@ -44,9 +44,6 @@ public class GameMenu : MonoBehaviour
 		request.SetRequestHeader("Content-Type", "application/json");
 
 		yield return request.Send();
-
-		Debug.Log("json: " + json);
-		Debug.Log("Status Code: " + request.responseCode);
 	}
 
 	public void SetPage (string page)

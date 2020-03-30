@@ -18,6 +18,14 @@ public class UI : MonoBehaviour
 		timeTxt.text = "Time : " + (int)Game.time;
 		healthBar.value = Player.currHp;
 		healthBar.maxValue = Player.maxHp;
-		hpTxt.text = Player.currHp + " / " + Player.maxHp;
+
+		if (Player.currHp < 0)
+		{
+			hpTxt.text = "0 / " + Player.maxHp;
+		}
+		else
+		{
+			hpTxt.text = Player.currHp + " / " + Player.maxHp;
+		}
 	}
 }
